@@ -34,6 +34,7 @@ Following is the drawing of [this model](https://www.ebi.ac.uk/biomodels-main/BI
 
 # Need help
 
-This is a very rudimentary script to quickly plot the moderate size SBML. Please
-open  issue on repository (with SBML model file) in case you need some help or
-want enhancement.
+This is a very rudimentary script for quickly plotting a moderate size SBML model. 
+
+Open issue on this repository with SBML model file attach  in case you need some
+help or want enhancement.
