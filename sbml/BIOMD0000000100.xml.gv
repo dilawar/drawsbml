@@ -1,0 +1,37 @@
+strict digraph  {
+"/intravesicular/Rkf" [type=reaction, shape=square, xlabel=Rkf, label=""];
+"/intravesicular/R5" [type=reaction, shape=square, xlabel=R5, label=""];
+"/intravesicular/R8" [type=reaction, shape=square, xlabel=R8, label=""];
+"/intravesicular/vin" [type=reaction, shape=square, xlabel=vin, label=""];
+"/cytosol/Z" [style=filled, fontsize=8, fillcolor="#0000ff64", color=red, type=species, shape=circle, label=Z];
+"/intravesicular/R6" [type=reaction, shape=square, xlabel=R6, label=""];
+"/intravesicular/Rkz" [type=reaction, shape=square, xlabel=Rkz, label=""];
+"/intravesicular/R4" [type=reaction, shape=square, xlabel=R4, label=""];
+"/cytosol/GP" [style=filled, fontsize=8, fillcolor="#0000ff64", color=red, type=species, shape=circle, label=GP];
+"/intravesicular/R2" [type=reaction, shape=square, xlabel=R2, label=""];
+"/intravesicular/R3" [type=reaction, shape=square, xlabel=R3, label=""];
+"/intravesicular/R7" [type=reaction, shape=square, xlabel=R7, label=""];
+"/extracellular/EC" [style=filled, fontsize=8, fillcolor="#0000ff64", color=red, type=species, shape=circle, label=EC];
+"/cytosol/A" [style=filled, fontsize=8, fillcolor="#0000ff64", color=red, type=species, shape=circle, label=A];
+"/intravesicular/Y" [style=filled, fontsize=8, fillcolor="#0000ff64", color=red, type=species, shape=circle, label=Y];
+"/intravesicular/Rkf" -> "/cytosol/Z";
+"/intravesicular/vin" -> "/cytosol/Z";
+"/cytosol/Z" -> "/intravesicular/Rkz";
+"/cytosol/Z" -> "/intravesicular/R5";
+"/cytosol/Z" -> "/intravesicular/R2";
+"/cytosol/Z" -> "/intravesicular/R3";
+"/cytosol/Z" -> "/intravesicular/R7";
+"/intravesicular/Rkz" -> "/extracellular/EC";
+"/intravesicular/R4" -> "/cytosol/A";
+"/cytosol/GP" -> "/intravesicular/R7";
+"/cytosol/GP" -> "/intravesicular/R8";
+"/intravesicular/R2" -> "/intravesicular/Y";
+"/intravesicular/R3" -> "/cytosol/Z";
+"/intravesicular/R7" -> "/cytosol/GP";
+"/extracellular/EC" -> "/intravesicular/vin";
+"/cytosol/A" -> "/intravesicular/R6";
+"/cytosol/A" -> "/intravesicular/R5";
+"/cytosol/A" -> "/intravesicular/R3";
+"/intravesicular/Y" -> "/intravesicular/Rkf";
+"/intravesicular/Y" -> "/intravesicular/R3";
+}

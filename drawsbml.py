@@ -184,7 +184,7 @@ class SBML( ):
         return outfile 
 
     def plot_gv( self, program, gvfile, outfile, extra = [ ] ):
-        pngfile = outfile or '%s.png' 
+        pngfile = outfile or '%s.png' % gvfile
         cmd = [program ] + extra + [ '-Tpng', gvfile, '-o', pngfile]
         logging.debug( '| Running : %s' % ' '.join( cmd ) )
         try:
