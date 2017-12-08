@@ -6,12 +6,12 @@ Draw Signalling Pathway (SBML format)
 - graphviz 
     `sudo apt install graphviz`
 - python-networkx 
-        pip install networkx --user 
+        `pip install networkx --user` 
     or,
-        sudo apt install python-networkx
+        `sudo apt install python-networkx`
 
 - libsbml
-    pip install python-libsbml --user 
+    `pip install python-libsbml --user`
 
 # Usage 
 
