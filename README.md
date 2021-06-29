@@ -28,11 +28,11 @@ Draw Signalling Pathway in SBML.
 
 Following is the drawing of [this mode](https://www.ebi.ac.uk/biomodels-main/BIOMD0000000100)
 
-![BIOMD0000000100.xml](./sbml/BIOMD0000000100.xml.gv.png)
+![BIOMD0000000100.xml](./tests/BIOMD0000000100.xml.gv.png)
 
 Following is the drawing of [this model](https://www.ebi.ac.uk/biomodels-main/BIOMD0000000200)
 
-![BIOMD0000000200.xml](./sbml/BIOMD0000000200.xml.gv.png)
+![BIOMD0000000200.xml](./tests/BIOMD0000000200.xml.gv.png)
 
 # Need help
 
