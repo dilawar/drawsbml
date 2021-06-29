@@ -7,6 +7,6 @@ test: build
 	poetry run pytest
 
 upload: build test
-	poetry publish
+	poetry publish -u __token__ -p $(PYPI_TOKEN)
 
 .PHONY: build upload
