@@ -183,19 +183,20 @@ class SBML:
         logger.info("Wrote topology to %s" % outfile)
         return outfile
 
-    def plot_gv(self, program, gvfile, outfile, extra=[]):
+    def plot_gv(self, program, gvfile, outfile, extra=[]) -> Path:
         outfile = outfile or "%s.png" % gvfile
-        ext = Path(outfile).suffix[1:]  # remove leading '.'
-        cmd = [program] + extra + [f"-T{ext}", gvfile, "-o", outfile]
+        outfile = Path(outfile)
+        ext = outfile.suffix[1:]  # remove leading '.'
+        cmd = [program] + extra + [f"-T{ext}", gvfile, "-o", str(outfile)]
         logger.debug(" executing : %s" % " ".join(cmd))
         try:
             s = subprocess.run(cmd, check=True, capture_output=True)
             logger.debug(s.stdout)
-        except Exception:
+        except Exception as e:
             logger.error(f"Failed to plot because command `{' '.join(cmd)}` failed!")
-            quit(-1)
+            raise e
 
-        return pngfile
+        return outfile
 
     def draw(self, **kwargs):
         gvfile = kwargs.get("gv_file", "") or "%s.gv" % kwargs["input"]
