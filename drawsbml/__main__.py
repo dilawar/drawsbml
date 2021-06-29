@@ -184,11 +184,13 @@ class SBML:
         return outfile
 
     def plot_gv(self, program, gvfile, outfile, extra=[]):
-        pngfile = outfile or "%s.png" % gvfile
-        cmd = [program] + extra + ["-Tpng", gvfile, "-o", pngfile]
+        outfile = outfile or "%s.png" % gvfile
+        ext = Path(outfile).suffix
+        cmd = [program] + extra + [f"-T{ext}", gvfile, "-o", outfile]
         logger.debug(" executing : %s" % " ".join(cmd))
         try:
-            subprocess.run(cmd, check=True)
+            s = subprocess.run(cmd, check=True, capture_output=True)
+            logger.debug(s.stdout)
         except Exception:
             logger.error(f"Failed to plot because command `{' '.join(cmd)}` failed!")
             quit(-1)
@@ -206,12 +208,13 @@ class SBML:
         )
         logger.info("Wrote image to %s" % outfile)
 
+
 def run(**kwargs):
     infile = Path(kwargs["input"])
     assert infile.exists()
 
     if kwargs["debug"]:
-        logger.basicConfig(level=logger.DEBUG)
+        logger.basicConfig(level=logging.DEBUG)
 
     sbml = SBML(infile)
     sbml.generate_graph()
@@ -260,4 +263,3 @@ def main():
 
     args = parser.parse_args()
     run(**vars(args))
-
