@@ -2,26 +2,29 @@
 
 Draw Signalling Pathway in SBML.
 
-# Dependencies
+# Install
+
+```sh
+python3 -m pip install drawsbml
+```
+
+You may have to install `graphviz` manually.
 
 - graphviz
     `sudo apt install graphviz`
 
-- python-networkx
-        `pip3 install networkx --user`
-    or,
-        `sudo apt install python-networkx`
-
-- libsbml
-    `pip3 install python-libsbml --user`
 
 # Usage
 
-    ./drawsbml.py -i ./BIOMD0000000002.xml -o a.png
+```sh
+drawsbml -i ./BIOMD0000000002.xml -o a.pdf
+```
 
 ## help
 
-    ./drawsbml.py -h
+```sh
+drawsbml -h
+```
 
 
 ## Examples

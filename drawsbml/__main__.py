@@ -185,7 +185,7 @@ class SBML:
 
     def plot_gv(self, program, gvfile, outfile, extra=[]):
         outfile = outfile or "%s.png" % gvfile
-        ext = Path(outfile).suffix
+        ext = Path(outfile).suffix[1:]  # remove leading '.'
         cmd = [program] + extra + [f"-T{ext}", gvfile, "-o", outfile]
         logger.debug(" executing : %s" % " ".join(cmd))
         try:
@@ -212,9 +212,6 @@ class SBML:
 def run(**kwargs):
     infile = Path(kwargs["input"])
     assert infile.exists()
-
-    if kwargs["debug"]:
-        logger.basicConfig(level=logging.DEBUG)
 
     sbml = SBML(infile)
     sbml.generate_graph()
@@ -252,14 +249,5 @@ def main():
         default=[],
         help="Extra argument passed to graphviz program e.g. -Gsplines=slines",
     )
-    parser.add_argument(
-        "--debug",
-        "-d",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Run in debug mode",
-    )
-
     args = parser.parse_args()
     run(**vars(args))
