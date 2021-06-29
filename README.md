@@ -1,4 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/drawsbml.svg)](https://badge.fury.io/py/drawsbml)
+[![Github CI](https://github.com/dilawar/drawsbml/actions/workflows/python-app.yml/badge.svg)](https://github.com/dilawar/drawsbml/actions/workflows/python-app.yml)
 
 # drawsbml
 
