@@ -1,28 +1,30 @@
 # drawsbml
-Draw Signalling Pathway (SBML format)
+
+Draw Signalling Pathway in SBML.
 
 # Dependencies
 
-- graphviz 
+- graphviz
     `sudo apt install graphviz`
-- python-networkx 
-        `pip install networkx --user` 
+
+- python-networkx
+        `pip3 install networkx --user`
     or,
         `sudo apt install python-networkx`
 
 - libsbml
-    `pip install python-libsbml --user`
+    `pip3 install python-libsbml --user`
 
-# Usage 
+# Usage
 
     ./drawsbml.py -i ./BIOMD0000000002.xml -o a.png
 
-### help
+## help
 
     ./drawsbml.py -h
 
-# Examples
 
+## Examples
 
 Following is the drawing of [this mode](https://www.ebi.ac.uk/biomodels-main/BIOMD0000000100)
 
@@ -34,7 +36,6 @@ Following is the drawing of [this model](https://www.ebi.ac.uk/biomodels-main/BI
 
 # Need help
 
-This is a very rudimentary script for quickly plotting a moderate size SBML model. 
+This is a very basic script for quickly plotting a moderate size SBML model.
 
-Open issue on this repository with SBML model file attach  in case you need some
-help or want enhancement.
+In case, you need help of want enhancement, please open an issue on this repository. Attach your SBML model file.
