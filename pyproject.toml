@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "drawsbml"
-version = "0.1.1"
+version = "0.1.2"
 description = "Draw Signalling Pathways (SBML) using graphviz"
 authors = ["Dilawar Singh <dilawar.s.rajput@gmail.com>"]
 license = "GPLv3"
