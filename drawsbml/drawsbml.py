@@ -1,10 +1,6 @@
-#!/usr/bin/env python3
-
 __author__ = "Dilawar Singh"
-__copyright__ = "Copyright 2017-, Dilawar Singh"
-__version__ = "1.0.1"
-__maintainer__ = "Dilawar Singh"
 __email__ = "dilawar.s.rajput@gmail.com"
+__copyright__ = "Copyright 2017-, Dilawar Singh"
 
 import libsbml
 import networkx as nx
@@ -16,7 +12,10 @@ from pathlib import Path
 
 import logging
 
-logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+
+
+GRAPHVIZ_OPTIONS = ["-Gsplines=ortho", "-Goverlap=prism", "-Granksep=1", "-Gnodesep=1"]
 
 
 def path_to_label(path):
@@ -60,10 +59,10 @@ class SBML:
         try:
             self.sbml = libsbml.readSBML(self.filepath)
         except Exception as e:
-            logging.error(f"Failed to load {self.filepath}")
-            logging.error(f"\tError was {e}")
-            quit(-1)
-        logging.info("SBML is loaded")
+            logger.error(f"Failed to load {self.filepath}")
+            logger.error(f"\tError was {e}")
+            quit(0)
+        logger.info("SBML is loaded")
 
     def addSpecies(self, elem):
         baseCompt = self.compartments[elem.getCompartment()]
@@ -85,7 +84,7 @@ class SBML:
             fontsize=8,
         )
         self.species[elem.id] = path
-        logging.debug("Added Species elem %s" % path)
+        logger.debug("Added Species elem %s" % path)
 
     def getStoichiometry(self, s):
         if s.getStoichiometry():
@@ -93,10 +92,11 @@ class SBML:
         else:
             return 1
 
-    def addKineticLaw(self, klaw, reac):
+    def addKineticLaw(self, klaw, reacpath):
         kmath = klaw.getMath()
         mathExpr = libsbml.formulaToString(kmath)
-        localParams = klaw.getListOfLocalParameters()
+
+        # localParams = klaw.getListOfLocalParameters()
 
         # Draw edge from node to reaction.
         allNodes = [kmath]
@@ -111,10 +111,10 @@ class SBML:
                 c = n.getChild(i)
                 allNodes.append(c)
 
-        logging.debug("KLAW %s" % mathExpr)
+        logger.debug("KLAW %s" % mathExpr)
 
     def addReaction(self, elem):
-        logging.info(f"Adding reaction id {elem}")
+        logger.info(f"Adding reaction id {elem}")
         compt = elem.getCompartment() or self.currentCompt
         assert self.currentCompt, (
             "I could not determine compartment for reaction %s" % elem.id
@@ -138,7 +138,7 @@ class SBML:
 
         klaw = elem.getKineticLaw()
         if klaw is not None:
-            self.addKineticLaw(klaw, elem)
+            self.addKineticLaw(klaw, reacpath)
 
         for s in subs:
             sname = s.getSpecies()
@@ -154,13 +154,13 @@ class SBML:
                 self.g.add_edge(reacpath, ppath)
                 prds1.append(ppath)
 
-        logging.info(
+        logger.info(
             "Added reaction: %s <--> %s" % (" + ".join(subs1), " + ".join(prds1))
         )
 
     def addCompartment(self, c, parent):
         comptPath = "%s/%s" % (parent, c.id)
-        logging.info("Loading compartment %s" % comptPath)
+        logger.info("Loading compartment %s" % comptPath)
         self.compartments[c.id] = comptPath
         self.currentCompt = c.id
 
@@ -172,25 +172,25 @@ class SBML:
             for compt in self.model.getListOfCompartments()
         ]
 
-        # logging.info(f"Total species {self.model.getNumSpecies()}")
-        # logging.info(f"Total reactions {self.model.getNumReactions()}")
+        # logger.info(f"Total species {self.model.getNumSpecies()}")
+        # logger.info(f"Total reactions {self.model.getNumReactions()}")
 
         [self.addSpecies(species) for species in self.model.getListOfSpecies()]
         [self.addReaction(reac) for reac in self.model.getListOfReactions()]
 
     def write_topology(self, outfile):
         nx.drawing.nx_pydot.write_dot(self.g, outfile)
-        logging.info("Wrote topology to %s" % outfile)
+        logger.info("Wrote topology to %s" % outfile)
         return outfile
 
     def plot_gv(self, program, gvfile, outfile, extra=[]):
         pngfile = outfile or "%s.png" % gvfile
         cmd = [program] + extra + ["-Tpng", gvfile, "-o", pngfile]
-        logging.debug(" executing : %s" % " ".join(cmd))
+        logger.debug(" executing : %s" % " ".join(cmd))
         try:
             subprocess.run(cmd, check=True)
         except Exception:
-            logging.error(f"Failed to plot because command `{' '.join(cmd)}` failed!")
+            logger.error(f"Failed to plot because command `{' '.join(cmd)}` failed!")
             quit(-1)
 
         return pngfile
@@ -201,26 +201,24 @@ class SBML:
         outfile = self.plot_gv(
             program=kwargs["graphviz_program"],
             gvfile=gvfile,
-            extra=["-Goverlap=false", "-Gnodesep=1"]
-            + kwargs.get("gv_extra", []),
+            extra=GRAPHVIZ_OPTIONS + kwargs.get("gv_extra", []),
             outfile=kwargs.get("output", ""),
         )
-        logging.info("Wrote image to %s" % outfile)
+        logger.info("Wrote image to %s" % outfile)
 
-
-def main(**kwargs):
+def run(**kwargs):
     infile = Path(kwargs["input"])
     assert infile.exists()
 
     if kwargs["debug"]:
-        logging.basicConfig(level=logging.DEBUG)
+        logger.basicConfig(level=logger.DEBUG)
 
     sbml = SBML(infile)
     sbml.generate_graph()
     sbml.draw(**kwargs)
 
 
-if __name__ == "__main__":
+def main():
     import argparse
 
     # Argument parser.
@@ -260,8 +258,6 @@ if __name__ == "__main__":
         help="Run in debug mode",
     )
 
-    class Args:
-        pass
-
     args = parser.parse_args()
-    main(**vars(args))
+    run(**vars(args))
+
