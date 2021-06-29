@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/drawsbml.svg)](https://badge.fury.io/py/drawsbml)
+
 # drawsbml
 
 Draw Signalling Pathway in SBML.
