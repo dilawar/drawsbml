@@ -5,6 +5,7 @@ __copyright__ = "Copyright 2017-, Dilawar Singh"
 import libsbml
 import networkx as nx
 import subprocess
+import re
 
 import typing as T
 
@@ -15,11 +16,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-GRAPHVIZ_OPTIONS = ["-Gsplines=ortho", "-Goverlap=prism", "-Granksep=1", "-Gnodesep=1"]
+GRAPHVIZ_OPTIONS = ["-Gsplines=ortho", "-Goverlap=prism", "-Granksep=2", "-Gnodesep=1"]
 
 
 def path_to_label(path):
     return path.split("/")[-1]
+
+
+def elem_to_label(elem):
+    name = elem.name or elem.id
+    name = re.sub(r'\[(\w+)\]', r'\n\1', name)
+    return name.split("/")[-1]
 
 
 def get_path(n, compt=""):
@@ -74,13 +81,11 @@ class SBML:
         self.g.add_node(
             path,
             type="species",
-            label=path_to_label(path)
-            # , xlabel = path_to_label( path )
-            ,
+            label=elem_to_label(elem),
             color="red",
-            shape="circle",
-            fillcolor=color_hex(color),
-            style="filled",
+            shape="rect",
+            #fillcolor=color_hex(color),
+            #style="filled",
             fontsize=8,
         )
         self.species[elem.id] = path
@@ -128,12 +133,15 @@ class SBML:
         prds = elem.getListOfProducts()
         subs1, prds1 = [], []
 
+        color = (0, 0, 255, 100)
         self.g.add_node(
             reacpath,
             type="reaction",
-            label="",  # path_to_label( reacpath )
-            xlabel=path_to_label(reacpath),
-            shape="square",
+            label=path_to_label(reacpath),
+            # xlabel=elem_to_label(elem),
+            shape="ellipse",
+            fillcolor=color_hex(color),
+            style="filled",
         )
 
         klaw = elem.getKineticLaw()
@@ -164,6 +172,14 @@ class SBML:
         self.compartments[c.id] = comptPath
         self.currentCompt = c.id
 
+    def prune_graph(self):
+        disconnectedNodes = [
+            node for node, deg in dict(self.g.degree()).items() if deg == 0
+        ]
+        for n in disconnectedNodes:
+            logger.warning(f"Disconnected node {n}")
+        self.g.remove_nodes_from(disconnectedNodes)
+
     def generate_graph(self):
         root = ""
         self.model = self.sbml.getModel()
@@ -177,6 +193,7 @@ class SBML:
 
         [self.addSpecies(species) for species in self.model.getListOfSpecies()]
         [self.addReaction(reac) for reac in self.model.getListOfReactions()]
+        self.prune_graph()
 
     def write_topology(self, outfile):
         nx.drawing.nx_pydot.write_dot(self.g, outfile)
